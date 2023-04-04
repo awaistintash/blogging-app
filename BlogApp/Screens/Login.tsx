@@ -17,7 +17,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const userInfo = useSelector((state: any) => state.user?.user);
+  const userInfo = useSelector((state: any) => state.user?.userDetails);
   console.log('user::', userInfo);
 
   const dispatch = useDispatch();
@@ -80,7 +80,7 @@ const Login = () => {
     <View style={styles.loginFormContainer}>
       {isLogin && userInfo ? (
         <View>
-          <Text>Hey {userInfo.email}</Text>
+          <Text>Hey {userInfo}</Text>
           <Text onPress={handleLogout}>LogOut</Text>
         </View>
       ) : (
