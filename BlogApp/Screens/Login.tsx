@@ -8,7 +8,8 @@ import {
 } from 'react-native';
 
 import auth from '@react-native-firebase/auth';
-import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import {useDispatch, useSelector} from 'react-redux';
+import {setUser} from '../redux/userSlice';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -16,7 +17,10 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const [userInfo, setUserInfo] = useState<FirebaseAuthTypes.User>();
+  const userInfo = useSelector((state: any) => state.user?.user);
+  console.log('user::', userInfo);
+
+  const dispatch = useDispatch();
 
   const handleLogin = () => {
     if (email && password) {
@@ -25,8 +29,8 @@ const Login = () => {
         .then(userCredentials => {
           const user = userCredentials.user;
           if (user) {
-            setUserInfo(user);
             setIsLogin(true);
+            dispatch(setUser(user?.email));
           }
         })
         .catch(error => {
@@ -46,7 +50,6 @@ const Login = () => {
         .then(userCredentials => {
           const user = userCredentials.user;
           if (user) {
-            setUserInfo(user);
             setIsRegister(false);
           }
         })
@@ -69,7 +72,7 @@ const Login = () => {
       .signOut()
       .then(() => {
         setIsLogin(false);
-        setUserInfo(undefined);
+        dispatch(setUser('null'));
       });
   };
 
