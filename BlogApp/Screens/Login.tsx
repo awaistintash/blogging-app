@@ -10,6 +10,7 @@ import {
 import auth from '@react-native-firebase/auth';
 import {useDispatch, useSelector} from 'react-redux';
 import {setUser} from '../redux/userSlice';
+import CreateBlog from './CreateBlog';
 
 const Login = () => {
   const [isLogin, setIsLogin] = useState(false);
@@ -18,7 +19,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
   const userInfo = useSelector((state: any) => state.user?.userDetails);
-  console.log('user::', userInfo);
 
   const dispatch = useDispatch();
 
@@ -30,7 +30,7 @@ const Login = () => {
           const user = userCredentials.user;
           if (user) {
             setIsLogin(true);
-            dispatch(setUser(user?.email));
+            dispatch(setUser(user?.uid));
           }
         })
         .catch(error => {
@@ -67,22 +67,10 @@ const Login = () => {
     }
   };
 
-  const handleLogout = () => {
-    auth()
-      .signOut()
-      .then(() => {
-        setIsLogin(false);
-        dispatch(setUser('null'));
-      });
-  };
-
   return (
     <View style={styles.loginFormContainer}>
       {isLogin && userInfo ? (
-        <View>
-          <Text>Hey {userInfo}</Text>
-          <Text onPress={handleLogout}>LogOut</Text>
-        </View>
+        <CreateBlog />
       ) : (
         <>
           <Text style={styles.loginFormHeading}>MyBlog App</Text>
