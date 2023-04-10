@@ -7,61 +7,29 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-import auth from '@react-native-firebase/auth';
-import {useDispatch, useSelector} from 'react-redux';
-import {setUser} from '../redux/userSlice';
-import CreateBlog from './CreateBlog';
+import {useDispatch} from 'react-redux';
+import {loginUser, registerUser} from '../redux/userSlice';
+import {AppDispatch} from '../store';
 
 const Login = () => {
-  const [isLogin, setIsLogin] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
-  const [email, setEmail] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
-  const userInfo = useSelector((state: any) => state.user?.userDetails);
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleLogin = () => {
-    if (email && password) {
-      auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(userCredentials => {
-          const user = userCredentials.user;
-          if (user) {
-            setIsLogin(true);
-            dispatch(setUser(user?.uid));
-          }
-        })
-        .catch(error => {
-          if (error.code === 'auth/invalid-email') {
-            console.log('That email address is invalid!');
-          }
-          console.error(error);
-        });
+    if (userEmail && password) {
+      dispatch(loginUser({userEmail, password}));
     } else {
       console.log('Error');
     }
   };
   const handleRegister = async () => {
-    if (email && password && rePassword && password === rePassword) {
-      await auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then(userCredentials => {
-          const user = userCredentials.user;
-          if (user) {
-            setIsRegister(false);
-          }
-        })
-        .catch(error => {
-          if (error.code === 'auth/email-already-in-use') {
-            console.log('That email address is already in use!');
-          }
-          if (error.code === 'auth/invalid-email') {
-            console.log('That email address is invalid!');
-          }
-          console.error(error);
-        });
+    if (userEmail && password && rePassword && password === rePassword) {
+      dispatch(registerUser({userEmail, password}));
+      setIsRegister(false);
     } else {
       console.log('Error');
     }
@@ -69,58 +37,52 @@ const Login = () => {
 
   return (
     <View style={styles.loginFormContainer}>
-      {isLogin && userInfo ? (
-        <CreateBlog />
-      ) : (
-        <>
-          <Text style={styles.loginFormHeading}>MyBlog App</Text>
-          <View style={styles.loginFormInputContainer}>
-            <TextInput
-              style={styles.loginFormInput}
-              placeholder="Email"
-              value={email}
-              onChangeText={text => setEmail(text)}
-            />
-          </View>
-          <View style={styles.loginFormInputContainer}>
-            <TextInput
-              style={styles.loginFormInput}
-              placeholder="Password"
-              value={password}
-              onChangeText={text => setPassword(text)}
-              secureTextEntry={true}
-            />
-          </View>
-          {isRegister && (
-            <View style={styles.loginFormInputContainer}>
-              <TextInput
-                style={styles.loginFormInput}
-                placeholder="Confirm Password"
-                value={rePassword}
-                onChangeText={text => setRePassword(text)}
-                secureTextEntry={true}
-              />
-            </View>
-          )}
-
-          <View style={styles.Buttons}>
-            <TouchableOpacity style={styles.loginButtonContainer}>
-              <Text
-                style={styles.loginButton}
-                onPress={isRegister ? handleRegister : handleLogin}>
-                {isRegister ? 'Sign Up' : 'Login'}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.registerButtonContainer}
-              onPress={() => setIsRegister(!isRegister)}>
-              <Text style={styles.registerButton}>
-                {isRegister ? 'Login' : 'Register'}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </>
+      <Text style={styles.loginFormHeading}>MyBlog App</Text>
+      <View style={styles.loginFormInputContainer}>
+        <TextInput
+          style={styles.loginFormInput}
+          placeholder="Email"
+          value={userEmail}
+          onChangeText={text => setUserEmail(text)}
+        />
+      </View>
+      <View style={styles.loginFormInputContainer}>
+        <TextInput
+          style={styles.loginFormInput}
+          placeholder="Password"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          secureTextEntry={true}
+        />
+      </View>
+      {isRegister && (
+        <View style={styles.loginFormInputContainer}>
+          <TextInput
+            style={styles.loginFormInput}
+            placeholder="Confirm Password"
+            value={rePassword}
+            onChangeText={text => setRePassword(text)}
+            secureTextEntry={true}
+          />
+        </View>
       )}
+
+      <View style={styles.Buttons}>
+        <TouchableOpacity style={styles.loginButtonContainer}>
+          <Text
+            style={styles.loginButton}
+            onPress={isRegister ? handleRegister : handleLogin}>
+            {isRegister ? 'Sign Up' : 'Login'}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.registerButtonContainer}
+          onPress={() => setIsRegister(!isRegister)}>
+          <Text style={styles.registerButton}>
+            {isRegister ? 'Login' : 'Register'}
+          </Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
