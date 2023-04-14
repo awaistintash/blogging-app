@@ -1,12 +1,34 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/react-in-jsx-scope */
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import {useSelector} from 'react-redux';
-import {BlogDetailState} from '../redux/blogSlice';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TouchableOpacity,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import {delBlog} from '../redux/blogSlice';
+import {AppDispatch} from '../store';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ProfileStackParamList, BlogDetailState} from '../utils/types';
 
-const Blogs = () => {
+type Props = NativeStackScreenProps<ProfileStackParamList>;
+
+const MyBlogs = ({navigation}: Props) => {
+  const dispatch = useDispatch<AppDispatch>();
   const user = useSelector((state: any) => state.user?.userDetails);
   const blogs = useSelector((state: any) => state.blogs?.blogDetails);
+
+  const handleDelBlog = (blogId: string) => {
+    dispatch(delBlog({blogId}));
+  };
+
+  const navigateToEditBlog = (blog: BlogDetailState) => {
+    navigation.navigate('EditBlog', {
+      blog,
+    });
+  };
 
   return (
     <ScrollView
@@ -27,6 +49,24 @@ const Blogs = () => {
               </View>
               <View style={styles.blogContent}>
                 <Text style={styles.content}>{blog.content}</Text>
+              </View>
+              <View style={styles.buttons}>
+                <TouchableOpacity style={styles.buttons}>
+                  <Text
+                    style={styles.editButton}
+                    onPress={() => {
+                      navigateToEditBlog(blog);
+                    }}>
+                    EDIT
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.buttons}
+                  onPress={() => {
+                    handleDelBlog(blog.blogId);
+                  }}>
+                  <Text style={styles.deleteButton}>DELETE</Text>
+                </TouchableOpacity>
               </View>
             </View>
           );
@@ -74,6 +114,18 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: '#000',
   },
+  buttons: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+  editButton: {
+    fontSize: 20,
+    color: 'blue',
+  },
+  deleteButton: {
+    fontSize: 20,
+    color: 'red',
+  },
 });
 
-export default Blogs;
+export default MyBlogs;

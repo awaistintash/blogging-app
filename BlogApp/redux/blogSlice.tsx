@@ -2,18 +2,7 @@ import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import firestore from '@react-native-firebase/firestore';
 import type {PayloadAction} from '@reduxjs/toolkit';
 // import {logOutUser} from './userSlice';
-
-export interface BlogDetailState {
-  uid: string | null;
-  email: string | null;
-  title: string | null;
-  content: string | null;
-  createdAt: String | null;
-}
-
-export interface BlogState {
-  blogDetails: BlogDetailState[];
-}
+import {BlogState, BlogDetailState, AddBlogPayload} from '../utils/types';
 
 const initialState: BlogState = {
   blogDetails: [],
@@ -21,13 +10,7 @@ const initialState: BlogState = {
 
 export const addBlog = createAsyncThunk(
   'blogs/addBlog',
-  async (payload: {
-    title: string;
-    content: string;
-    uid: string;
-    email: string;
-    createdAt: String;
-  }) => {
+  async (payload: AddBlogPayload) => {
     const {title, content, uid, email, createdAt} = payload;
     const ref = firestore().collection('blogs');
     await ref
@@ -45,6 +28,43 @@ export const addBlog = createAsyncThunk(
   },
 );
 
+export const delBlog = createAsyncThunk(
+  'blogs/delBlog',
+  async (payload: {blogId: string}) => {
+    const {blogId} = payload;
+    const ref = firestore().collection('blogs');
+    await ref
+      .doc(blogId)
+      .delete()
+      .then(() => {
+        console.log('Blog deleted!');
+      });
+    return payload;
+  },
+);
+
+export const editBlog = createAsyncThunk(
+  'blogs/editBlog',
+  async (payload: BlogDetailState) => {
+    const {blogId, title, content, uid, email, createdAt} = payload;
+    const ref = firestore().collection('blogs');
+    await ref
+      .doc(blogId)
+      .update({
+        title,
+        content,
+        uid,
+        email,
+        createdAt,
+      })
+
+      .then(() => {
+        console.log('Blog updated!');
+      });
+    return payload;
+  },
+);
+
 export const blogSlice = createSlice({
   name: 'blogs',
   initialState,
@@ -55,11 +75,6 @@ export const blogSlice = createSlice({
     clearBlogs: state => {
       state.blogDetails = [];
     },
-  },
-  extraReducers(builder) {
-    builder.addCase(addBlog.fulfilled, (state, action) => {
-      state.blogDetails.push(action.payload);
-    });
   },
 });
 

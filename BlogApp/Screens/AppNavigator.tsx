@@ -3,23 +3,43 @@
 import CreateBlog from './CreateBlog';
 import Profile from './Profile';
 import Blogs from './Blogs';
+import EditBlog from './EditBlog';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import useGetBlogs from '../firebase';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import {RootStackParamList, ProfileStackParamList} from '../utils/types';
 
-const Stack = createBottomTabNavigator();
+const RootStack = createBottomTabNavigator<RootStackParamList>();
+
+const ProfileStack = createNativeStackNavigator<ProfileStackParamList>();
+
+function ProfileScreenStack() {
+  return (
+    <ProfileStack.Navigator
+      screenOptions={{
+        headerShown: false,
+      }}>
+      <ProfileStack.Screen name="Profile" component={Profile} />
+      <ProfileStack.Screen name="EditBlog" component={EditBlog} />
+    </ProfileStack.Navigator>
+  );
+}
 
 const AppNavigator = () => {
   useGetBlogs();
 
   return (
-    <Stack.Navigator
+    <RootStack.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarIconStyle: {display: 'none'},
+        tabBarActiveTintColor: '#000',
+        tabBarLabelPosition: 'beside-icon',
       }}>
-      <Stack.Screen name="Profile" component={Profile} />
-      <Stack.Screen name="CreateBlog" component={CreateBlog} />
-      <Stack.Screen name="Blogs" component={Blogs} />
-    </Stack.Navigator>
+      <RootStack.Screen name="ProfileStack" component={ProfileScreenStack} />
+      <RootStack.Screen name="CreateBlog" component={CreateBlog} />
+      <RootStack.Screen name="Blogs" component={Blogs} />
+    </RootStack.Navigator>
   );
 };
 

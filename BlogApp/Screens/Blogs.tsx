@@ -2,7 +2,7 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {StyleSheet, Text, View, ScrollView} from 'react-native';
 import {useSelector} from 'react-redux';
-import {BlogDetailState} from '../redux/blogSlice';
+import {BlogDetailState} from '../utils/types';
 
 const Blogs = () => {
   const blogs = useSelector((state: any) => state.blogs?.blogDetails);

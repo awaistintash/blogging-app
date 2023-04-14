@@ -2,13 +2,7 @@ import {createAsyncThunk, createSlice} from '@reduxjs/toolkit';
 // import type {PayloadAction} from '@reduxjs/toolkit';
 import auth from '@react-native-firebase/auth';
 
-export interface userDetailState {
-  uid: string;
-  email: string;
-}
-export interface UserState {
-  userDetails: userDetailState;
-}
+import {UserState, LoginUserPayload} from '../utils/types';
 
 const initialState: UserState = {
   userDetails: {
@@ -19,7 +13,7 @@ const initialState: UserState = {
 
 export const loginUser = createAsyncThunk(
   'user/loginUser',
-  async (payload: {userEmail: string; password: string}) => {
+  async (payload: LoginUserPayload) => {
     const {userEmail, password} = payload;
     const response = await auth()
       .signInWithEmailAndPassword(userEmail, password)
@@ -42,7 +36,7 @@ export const loginUser = createAsyncThunk(
 
 export const registerUser = createAsyncThunk(
   'user/registerUser',
-  async (payload: {userEmail: string; password: string}) => {
+  async (payload: LoginUserPayload) => {
     const {userEmail, password} = payload;
     const response = await auth()
       .createUserWithEmailAndPassword(userEmail, password)

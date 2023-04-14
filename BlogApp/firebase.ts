@@ -19,6 +19,7 @@ const useGetBlogs = async () => {
         title: title,
         content: content,
         createdAt: createdAt,
+        blogId: doc.id,
       };
       dispatch(addBlogPost(blogDetails));
     });

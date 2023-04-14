@@ -2,8 +2,12 @@
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
 import MyBlogs from './MyBlogs';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ProfileStackParamList} from '../utils/types';
 
-const Profile = () => {
+type Props = NativeStackScreenProps<ProfileStackParamList>;
+
+const Profile = ({navigation, route}: Props) => {
   const user = useSelector((state: any) => state.user?.userDetails);
 
   return (
@@ -11,7 +15,7 @@ const Profile = () => {
       <View>
         <Text>{user?.email}</Text>
       </View>
-      <MyBlogs />
+      <MyBlogs navigation={navigation} route={route} />
     </>
   );
 };

@@ -1,22 +1,28 @@
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {addBlog} from '../redux/blogSlice';
+import {editBlog} from '../redux/blogSlice';
 import {AppDispatch} from '../store';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import {ProfileStackParamList} from '../utils/types';
 
-const CreateBlog = () => {
-  const [title, setTitle] = useState('');
-  const [content, setContent] = useState('');
+type Props = NativeStackScreenProps<ProfileStackParamList, 'EditBlog'>;
+
+const EditBlog = ({navigation, route}: Props) => {
+  const blog = route.params.blog;
+  const [title, setTitle] = useState(blog.title);
+  const [content, setContent] = useState(blog.content);
 
   const user = useSelector((state: any) => state.user?.userDetails);
 
   const dispatch = useDispatch<AppDispatch>();
 
-  const handleCreateBlog = () => {
+  const handleEditBlog = () => {
     const createdAt = new Date();
     if (title && content) {
       dispatch(
-        addBlog({
+        editBlog({
+          blogId: blog.blogId,
           title: title,
           content: content,
           uid: user?.uid,
@@ -31,13 +37,14 @@ const CreateBlog = () => {
   const resetStates = () => {
     setTitle('');
     setContent('');
+    navigation.navigate('Profile');
   };
 
   return (
     <View style={styles.loginFormContainer}>
       <View style={styles.blogContainer}>
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Create Blog</Text>
+          <Text style={styles.title}>Edit Blog</Text>
         </View>
         <View style={styles.blogPostContainer}>
           <View style={styles.inputs}>
@@ -53,7 +60,7 @@ const CreateBlog = () => {
               value={content}
               onChangeText={text => setContent(text)}
             />
-            <Button title="Add Blog Post" onPress={handleCreateBlog} />
+            <Button title="Edit Blog Post" onPress={handleEditBlog} />
           </View>
         </View>
       </View>
@@ -120,10 +127,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     width: '100%',
-    // flex: 1,
-    justifyContent: 'flex-start',
-    alignItems: 'center',
   },
 });
 
-export default CreateBlog;
+export default EditBlog;
