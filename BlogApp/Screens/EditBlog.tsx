@@ -1,37 +1,22 @@
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {editBlog} from '../redux/blogSlice';
-import {AppDispatch} from '../store';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList} from '../utils/types';
+import {useBlogs} from '../services/useBlogs';
 
 type Props = NativeStackScreenProps<ProfileStackParamList, 'EditBlog'>;
 
 const EditBlog = ({navigation, route}: Props) => {
   const blog = route.params.blog;
-  const [title, setTitle] = useState(blog.title);
-  const [content, setContent] = useState(blog.content);
 
-  const user = useSelector((state: any) => state.user?.userDetails);
+  const {handleEditBlog} = useBlogs();
 
-  const dispatch = useDispatch<AppDispatch>();
+  const [title, setTitle] = useState(blog.title || '');
+  const [content, setContent] = useState(blog.content || '');
 
-  const handleEditBlog = () => {
-    const createdAt = new Date();
-    if (title && content) {
-      dispatch(
-        editBlog({
-          blogId: blog.blogId,
-          title: title,
-          content: content,
-          uid: user?.uid,
-          email: user?.email,
-          createdAt: createdAt.toString(),
-        }),
-      );
-      resetStates();
-    }
+  const editBlog = () => {
+    const response = handleEditBlog(blog.blogId, title, content);
+    response ? resetStates() : null;
   };
 
   const resetStates = () => {
@@ -60,7 +45,7 @@ const EditBlog = ({navigation, route}: Props) => {
               value={content}
               onChangeText={text => setContent(text)}
             />
-            <Button title="Edit Blog Post" onPress={handleEditBlog} />
+            <Button title="Edit Blog Post" onPress={editBlog} />
           </View>
         </View>
       </View>

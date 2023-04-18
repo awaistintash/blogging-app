@@ -1,31 +1,24 @@
 import {View, Text, TextInput, Button, StyleSheet} from 'react-native';
 import React, {useState} from 'react';
-import {useDispatch, useSelector} from 'react-redux';
-import {addBlog} from '../redux/blogSlice';
-import {AppDispatch} from '../store';
+import {useBlogs} from '../services/useBlogs';
 
 const CreateBlog = () => {
+  const {handleCreateBlog} = useBlogs();
+
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
 
-  const user = useSelector((state: any) => state.user?.userDetails);
+  const changeTitle = (text: string) => {
+    setTitle(text);
+  };
 
-  const dispatch = useDispatch<AppDispatch>();
+  const changeContent = (text: string) => {
+    setContent(text);
+  };
 
-  const handleCreateBlog = () => {
-    const createdAt = new Date();
-    if (title && content) {
-      dispatch(
-        addBlog({
-          title: title,
-          content: content,
-          uid: user?.uid,
-          email: user?.email,
-          createdAt: createdAt.toString(),
-        }),
-      );
-      resetStates();
-    }
+  const createBlog = () => {
+    const response = handleCreateBlog(title, content);
+    response ? resetStates() : null;
   };
 
   const resetStates = () => {
@@ -45,15 +38,15 @@ const CreateBlog = () => {
               style={styles.inputTitle}
               placeholder="Enter Title"
               value={title}
-              onChangeText={text => setTitle(text)}
+              onChangeText={text => changeTitle(text)}
             />
             <TextInput
               style={styles.inputContent}
               placeholder="Enter Content"
               value={content}
-              onChangeText={text => setContent(text)}
+              onChangeText={text => changeContent(text)}
             />
-            <Button title="Add Blog Post" onPress={handleCreateBlog} />
+            <Button title="Add Blog Post" onPress={createBlog} />
           </View>
         </View>
       </View>

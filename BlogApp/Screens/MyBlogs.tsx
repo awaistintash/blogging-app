@@ -7,22 +7,18 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-import {delBlog} from '../redux/blogSlice';
-import {AppDispatch} from '../store';
+import {useSelector} from 'react-redux';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ProfileStackParamList, BlogDetailState} from '../utils/types';
+import {useBlogs} from '../services/useBlogs';
 
 type Props = NativeStackScreenProps<ProfileStackParamList>;
 
 const MyBlogs = ({navigation}: Props) => {
-  const dispatch = useDispatch<AppDispatch>();
+  const {handleDelBlog} = useBlogs();
+
   const user = useSelector((state: any) => state.user?.userDetails);
   const blogs = useSelector((state: any) => state.blogs?.blogDetails);
-
-  const handleDelBlog = (blogId: string) => {
-    dispatch(delBlog({blogId}));
-  };
 
   const navigateToEditBlog = (blog: BlogDetailState) => {
     navigation.navigate('EditBlog', {

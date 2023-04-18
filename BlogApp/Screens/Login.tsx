@@ -6,32 +6,34 @@ import {
   TextInput,
   TouchableOpacity,
 } from 'react-native';
-
-import {useDispatch} from 'react-redux';
-import {loginUser, registerUser} from '../redux/userSlice';
-import {AppDispatch} from '../store';
+import {useBlogs} from '../services/useBlogs';
 
 const Login = () => {
+  const {handleRegister, handleLogin} = useBlogs();
+
   const [isRegister, setIsRegister] = useState(false);
   const [userEmail, setUserEmail] = useState('');
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
 
-  const dispatch = useDispatch<AppDispatch>();
-
-  const handleLogin = () => {
-    if (userEmail && password) {
-      dispatch(loginUser({userEmail, password}));
-    } else {
-      console.log('Error');
-    }
+  const changeEmail = (text: string) => {
+    setUserEmail(text);
   };
-  const handleRegister = async () => {
-    if (userEmail && password && rePassword && password === rePassword) {
-      dispatch(registerUser({userEmail, password}));
+
+  const changePassword = (text: string) => {
+    setPassword(text);
+  };
+
+  const changeRePassword = (text: string) => {
+    setRePassword(text);
+  };
+
+  const userLogin = () => {
+    if (isRegister) {
+      handleRegister(userEmail, password, rePassword);
       setIsRegister(false);
     } else {
-      console.log('Error');
+      handleLogin(userEmail, password);
     }
   };
 
@@ -43,7 +45,7 @@ const Login = () => {
           style={styles.loginFormInput}
           placeholder="Email"
           value={userEmail}
-          onChangeText={text => setUserEmail(text)}
+          onChangeText={text => changeEmail(text)}
         />
       </View>
       <View style={styles.loginFormInputContainer}>
@@ -51,7 +53,7 @@ const Login = () => {
           style={styles.loginFormInput}
           placeholder="Password"
           value={password}
-          onChangeText={text => setPassword(text)}
+          onChangeText={text => changePassword(text)}
           secureTextEntry={true}
         />
       </View>
@@ -61,7 +63,7 @@ const Login = () => {
             style={styles.loginFormInput}
             placeholder="Confirm Password"
             value={rePassword}
-            onChangeText={text => setRePassword(text)}
+            onChangeText={text => changeRePassword(text)}
             secureTextEntry={true}
           />
         </View>
@@ -69,9 +71,7 @@ const Login = () => {
 
       <View style={styles.Buttons}>
         <TouchableOpacity style={styles.loginButtonContainer}>
-          <Text
-            style={styles.loginButton}
-            onPress={isRegister ? handleRegister : handleLogin}>
+          <Text style={styles.loginButton} onPress={userLogin}>
             {isRegister ? 'Sign Up' : 'Login'}
           </Text>
         </TouchableOpacity>

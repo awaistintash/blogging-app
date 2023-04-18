@@ -1,5 +1,5 @@
 import React from 'react';
-import Navigation from './Screens/Navigation';
+import Navigation from './Navigators/Navigation';
 import {store} from './store';
 import {Provider} from 'react-redux';
 

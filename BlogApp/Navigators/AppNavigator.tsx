@@ -1,9 +1,8 @@
 /* eslint-disable react/react-in-jsx-scope */
-// import {useEffect} from 'react';
-import CreateBlog from './CreateBlog';
-import Profile from './Profile';
-import Blogs from './Blogs';
-import EditBlog from './EditBlog';
+import CreateBlog from '../Screens/CreateBlog';
+import Profile from '../Screens/Profile';
+import Blogs from '../Screens/Blogs';
+import EditBlog from '../Screens/EditBlog';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import useGetBlogs from '../firebase';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
