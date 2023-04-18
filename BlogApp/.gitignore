@@ -32,7 +32,7 @@ android
 .prettierrc.js
 .node-version
 .watchmanconfig
-.app.json
+app.json
 babel.config.js
 Gemfile
 Gemfile.lock
