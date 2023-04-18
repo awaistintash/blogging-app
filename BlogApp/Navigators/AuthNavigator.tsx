@@ -1,6 +1,6 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import Login from '../Screens/Login';
+import Login from '../Screens/Login/Login';
 
 const Stack = createNativeStackNavigator();
 

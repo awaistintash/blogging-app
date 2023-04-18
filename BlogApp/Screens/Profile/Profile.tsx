@@ -1,9 +1,11 @@
 /* eslint-disable react/react-in-jsx-scope */
 import {Text, View} from 'react-native';
 import {useSelector} from 'react-redux';
-import MyBlogs from './MyBlogs';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {ProfileStackParamList} from '../utils/types';
+
+import MyBlogs from '../MyBlogs/MyBlogs';
+
+import {ProfileStackParamList} from '../../utils/types';
 
 type Props = NativeStackScreenProps<ProfileStackParamList>;
 

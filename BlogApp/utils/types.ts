@@ -1,10 +1,10 @@
 export interface BlogDetailState {
   blogId: string;
-  uid: string | null;
-  email: string | null;
-  title: string | undefined;
-  content: string | undefined;
-  createdAt: String | null;
+  uid?: string;
+  email?: string;
+  title?: string;
+  content?: string;
+  createdAt?: String;
 }
 
 export interface BlogState {
