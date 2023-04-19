@@ -25,22 +25,12 @@ ios/.xcode.env.local
 .bundle
 __tests__
 .vscode
-ios
-android
 .eslintrc.js
 .node_version
 .prettierrc.js
 .node-version
 .watchmanconfig
-app.json
-babel.config.js
-Gemfile
 Gemfile.lock
-metro.config.js
-package.json
-package-lock.json
-tsconfig.json
-yarn.lock
 # Android/IntelliJ
 #
 build/

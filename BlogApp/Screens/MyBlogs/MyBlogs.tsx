@@ -1,5 +1,5 @@
 /* eslint-disable react/react-in-jsx-scope */
-import {Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {Text, View, TouchableOpacity, FlatList} from 'react-native';
 import {useSelector} from 'react-redux';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 
@@ -23,45 +23,52 @@ const MyBlogs = ({navigation}: Props) => {
     });
   };
 
+  const renderBlog = ({item}: {item: BlogDetailState}) => {
+    if (item.email === user.email) {
+      return (
+        <View key={item.blogId} style={styles.blogContainer}>
+          <View style={styles.blogTitle}>
+            <Text style={styles.title}>{item.title}</Text>
+            <Text>by {item.email}</Text>
+          </View>
+          <View style={styles.blogContent}>
+            <Text style={styles.content}>{item.content}</Text>
+          </View>
+          <View style={styles.buttons}>
+            <TouchableOpacity style={styles.buttons}>
+              <Text
+                style={styles.editButton}
+                onPress={() => {
+                  navigateToEditBlog(item);
+                }}>
+                EDIT
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttons}
+              onPress={() => {
+                handleDelBlog(item.blogId);
+              }}>
+              <Text style={styles.deleteButton}>DELETE</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      );
+    }
+    return null;
+  };
+
+  const keyExtractor = (item: BlogDetailState) => item.blogId.toString();
+
   return (
-    <ScrollView
+    <FlatList
       style={styles.blogsContainer}
-      contentContainerStyle={styles.contentContainerStyle}>
-      <Text style={styles.blogsTitle}>My Blogs</Text>
-      {blogs.map((blog: BlogDetailState, index: number) => {
-        if (blog.email === user.email) {
-          return (
-            <View key={index} style={styles.blogContainer}>
-              <View style={styles.blogTitle}>
-                <Text style={styles.title}>{blog.title}</Text>
-                <Text>by {blog.email}</Text>
-              </View>
-              <View style={styles.blogContent}>
-                <Text style={styles.content}>{blog.content}</Text>
-              </View>
-              <View style={styles.buttons}>
-                <TouchableOpacity style={styles.buttons}>
-                  <Text
-                    style={styles.editButton}
-                    onPress={() => {
-                      navigateToEditBlog(blog);
-                    }}>
-                    EDIT
-                  </Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.buttons}
-                  onPress={() => {
-                    handleDelBlog(blog.blogId);
-                  }}>
-                  <Text style={styles.deleteButton}>DELETE</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          );
-        }
-      })}
-    </ScrollView>
+      contentContainerStyle={styles.contentContainerStyle}
+      data={blogs}
+      renderItem={renderBlog}
+      keyExtractor={keyExtractor}
+      ListHeaderComponent={<Text style={styles.blogsTitle}>My Blogs</Text>}
+    />
   );
 };
 

@@ -16,8 +16,6 @@ export const styles = StyleSheet.create({
     color: '#000',
   },
   blogContainer: {
-    flex: 1,
-    justifyContent: 'flex-start',
     width: '80%',
     border: '1px solid #000',
     borderRadius: 5,
